@@ -1,36 +1,5 @@
- /*/ const robotron = document.querySelector("#robotron");
+    var pecas = {
 
-Onde ocorre (ID) - Evento - Ação 
-
-document.querySelector("#robotron").addEventListener("click", dizOi);
-
-robotron.addEventListener("click", dizOi);
-
-function dizOi(){
-    console.log("Oi");
-    console.log("Bem-vindo ao robotron 2000");
-}
-dizOi();
-
-Função anonima - só pode ser utilizada neste evento, é possivel usar "=>" ao invés do "function"
-
-const robotron = document.querySelector("#robotron");
-
-robotron.addEventListener("click", function(){
-    console.log("Cliquei no robo");
-})
-
-function dizOi(nome){
-    console.log("Oi " + nome);
-    console.log("Bem-vindo ao Robotron 2000");
-}
-dizOi("Karine");
-/*/
-
-const controle = document.querySelectorAll("[data-controle]")
-const estatistica = document.querySelectorAll("[data-estatistica]")
-
-const pecas = {
     "bracos": {
         "forca": 29,
         "poder": 35,
@@ -63,26 +32,58 @@ const pecas = {
         "velocidade": -2
     }
 }
+    const pontos = document.querySelectorAll('[data-contador]');
+    const botoes = document.querySelectorAll('[data-controle]');
+    const stats = document.querySelectorAll('[data-stats]');
 
-controle.forEach( (elemento) => {
-    elemento.addEventListener('click', (evento) => {
-        manipulaDados(evento.target.textContent, evento.target.parentNode)
-        atualizaEstatistica(evento.target.dataset.peca)
+    botoes.forEach( (element, index) => {
+        element.addEventListener('click', (event) => {
+
+        let controle = event.target.parentNode.querySelector('.controle-contador');
+        let operacao = event.target.dataset.controle;
+        manipulaDados(operacao, controle);
+        
+
+        atualiza();
     })
-})
 
-function manipulaDados(operacao, controle) {
-    const peca = controle.querySelector("[data-contador]")
+});
 
-    if(operacao === "-") {
-        peca.value = parseInd(peca.value) - 1
-    } else {
-        peca.value = parseInt(peca.value) + 1
+    function manipulaDados(operacao, controle){
+        if(operacao == '-' && controle.value > 0){
+        controle.value = parseInt(controle.value) - 1;
+        }else if(operacao== '+' && controle.value < 100){
+        controle.value = parseInt(controle.value) + 1;
     }
 }
 
-function atualizaEstatistica(peca) {
-    estatistica.forEach( (elemento ) => {
-        elemento.textContent = parseInt(elemento.textContent) + pecas[peca][elemento.dataset.estatistica]
+    function atualiza(){
+    
+        var forca = 0;
+        var poder = 0;
+        var energia = 0;
+        var velocidade = 0;
+
+    pontos.forEach((elemento) => {
+        //pegar o valor do contador
+        var contador = parseInt(elemento.value);
+        //pega o nome do componente do contador
+        var nomeComponente = elemento.dataset.contador;
+        forca += pecas[nomeComponente].forca * contador;
+        poder += pecas[nomeComponente].poder * contador;
+        energia += pecas[nomeComponente].energia * contador;
+        velocidade += pecas[nomeComponente].velocidade * contador;
+
     })
+    
+    stats[0].textContent = forca;
+    stats[1].textContent = poder;
+    stats[2].textContent = energia;
+    stats[3].textContent = velocidade;
+    
 }
+
+
+
+
+
